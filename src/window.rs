@@ -1,6 +1,8 @@
 use pixels::{Pixels, SurfaceTexture, Error};
 use winit::{window::{Window, WindowBuilder}, event_loop::EventLoop, dpi::LogicalSize};
 
+use crate::{WIDTH, HEIGHT};
+
 pub struct GameWindow {
     pub window: Window,
     pub size: (u32, u32),
@@ -9,7 +11,7 @@ pub struct GameWindow {
 
 impl GameWindow {
     pub fn new(title: &str, event_loop: &EventLoop<()>) -> Result<Self, Error> {
-        let size = LogicalSize::new(400.0, 300.0);
+        let size = LogicalSize::new(WIDTH, HEIGHT);
         let window = WindowBuilder::new()
             .with_title(title)
             .with_inner_size(size)
@@ -30,18 +32,5 @@ impl GameWindow {
     pub fn resize(&mut self, new_size: (u32, u32)) {
         self.pixels.resize_surface(new_size.0, new_size.1).unwrap();
         self.size = new_size;
-    }
-
-    pub fn redraw(&mut self) -> Result<(), pixels::Error> {
-        let frame: &mut [u8] = self.pixels.frame_mut();
-
-        for pixel in frame.chunks_exact_mut(4) {
-            pixel[0] = 0x00; // Red
-            pixel[1] = 0xff; // Green
-            pixel[2] = 0xaf; // Blue
-            pixel[3] = 0xff; // Alpha
-        }
-
-        self.pixels.render()
     }
 }
